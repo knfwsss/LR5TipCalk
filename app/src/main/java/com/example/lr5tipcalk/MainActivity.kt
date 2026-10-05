@@ -16,6 +16,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,10 @@ fun TipScreen(modifier: Modifier = Modifier) {
     var dishCount by remember { mutableStateOf("") }
     var tipPercent by remember { mutableStateOf(0f) }
     var selectedDiscount by remember { mutableStateOf<Int?>(null) }
+
+    LaunchedEffect(dishCount) {
+        selectedDiscount = discountPercent(dishCount)
+    }
 
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -99,6 +104,17 @@ fun TipScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
+    }
+}
+
+fun discountPercent(raw: String): Int? {
+    val count = raw.trim().toIntOrNull() ?: return null
+    return when {
+        count in 1..2 -> 3
+        count in 3..5 -> 5
+        count in 6..10 -> 7
+        count > 10 -> 10
+        else -> null
     }
 }
 
