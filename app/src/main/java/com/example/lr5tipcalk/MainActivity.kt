@@ -5,11 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
 fun TipScreen(modifier: Modifier = Modifier) {
     var orderSum by remember { mutableStateOf("") }
     var dishCount by remember { mutableStateOf("") }
+    var tipPercent by remember { mutableStateOf(0f) }
 
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -65,6 +68,20 @@ fun TipScreen(modifier: Modifier = Modifier) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+            Text(
+                text = "Чаевые:",
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text("0")
+                Slider(
+                    value = tipPercent,
+                    onValueChange = { tipPercent = it },
+                    valueRange = 0f..25f,
+                    modifier = Modifier.weight(1f)
+                )
+                Text("25")
+            }
         }
     }
 }
