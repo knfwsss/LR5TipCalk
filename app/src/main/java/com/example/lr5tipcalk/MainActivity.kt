@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +44,7 @@ fun TipScreen(modifier: Modifier = Modifier) {
     var orderSum by remember { mutableStateOf("") }
     var dishCount by remember { mutableStateOf("") }
     var tipPercent by remember { mutableStateOf(0f) }
+    var selectedDiscount by remember { mutableStateOf<Int?>(null) }
 
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -81,6 +84,19 @@ fun TipScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier.weight(1f)
                 )
                 Text("25")
+            }
+            Text(
+                text = "Скидка:",
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                listOf(3, 5, 7, 10).forEach { percent ->
+                    RadioButton(
+                        selected = selectedDiscount == percent,
+                        onClick = { selectedDiscount = percent }
+                    )
+                    Text("$percent%")
+                }
             }
         }
     }
