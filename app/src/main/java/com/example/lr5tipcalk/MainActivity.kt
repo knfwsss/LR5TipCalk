@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lr5tipcalk.ui.theme.LR5TipCalkTheme
+import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +80,7 @@ fun TipScreen(modifier: Modifier = Modifier) {
                 Text("0")
                 Slider(
                     value = tipPercent,
-                    onValueChange = { tipPercent = it },
+                    onValueChange = { tipPercent = it.roundToInt().toFloat() },
                     valueRange = 0f..25f,
                     modifier = Modifier.weight(1f)
                 )
@@ -89,6 +90,7 @@ fun TipScreen(modifier: Modifier = Modifier) {
                 text = "Скидка:",
                 modifier = Modifier.padding(top = 12.dp)
             )
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 listOf(3, 5, 7, 10).forEach { percent ->
                     RadioButton(
@@ -98,8 +100,41 @@ fun TipScreen(modifier: Modifier = Modifier) {
                     Text("$percent%")
                 }
             }
+            val total = totalWithDiscount(orderSum, selectedDiscount)
+            val tip = tipAmount(orderSum, tipPercent)
+            Text(
+                text = "чаевые: $tipPercent",
+                modifier = Modifier.padding(top = 12.dp)
+            )
+            Text(
+                text = "Итоговая сумма: $total",
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            Text(
+                text = "Сумма чаевых: $tip",
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
     }
+}
+
+fun totalWithDiscount(orderRaw: String, discount: Int?): String {
+    val order = parseNumber(orderRaw) ?: return ""
+    val percent = discount ?: 0
+    return formatMoney(order * (100 - percent) / 100.0)
+}
+
+fun tipAmount(orderRaw: String, tipPercent: Float): String {
+    val order = parseNumber(orderRaw) ?: return ""
+    return formatMoney(order * tipPercent / 100.0)
+}
+
+private fun parseNumber(raw: String): Double? {
+    return raw.trim().replace(',', '.').toDoubleOrNull()
+}
+
+private fun formatMoney(value: Double): String {
+    return "%.2f".format(java.util.Locale.US, value)
 }
 
 fun discountPercent(raw: String): Int? {
